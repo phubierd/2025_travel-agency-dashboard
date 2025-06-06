@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router';
+import { Link, NavLink, useLoaderData, useNavigate } from 'react-router';
+import { logoutUser } from '~/appwrite/auth';
 import { sidebarItems } from '~/constants';
 import { cn } from '~/lib/utils';
 
@@ -8,6 +9,15 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
     name: 'PhuCT',
     email: 'phuct@gmail.com',
     imageUrl: '/assets/images/james.webp',
+  };
+
+  // can not get user from google authen !!!
+  // const user = useLoaderData();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate('/sign-in');
   };
 
   return (
@@ -55,9 +65,7 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
           </article>
 
           <button
-            onClick={() => {
-              console.log('log out !!!');
-            }}
+            onClick={handleLogout}
             className="cursor-pointer"
           >
             <img

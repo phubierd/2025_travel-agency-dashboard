@@ -4,13 +4,15 @@ import { redirect } from 'react-router';
 
 export const loginWithGoogle = async () => {
   try {
-    account.createOAuth2Session(OAuthProvider.Google);
+    const response = await account.createOAuth2Session(OAuthProvider.Google);
+    console.log(response, 'response ????');
   } catch (error) {
     console.log('loginWithGoogle', error);
   }
 };
 
 export const getUser = async () => {
+  console.log('get user info ????');
   try {
     const user = await account.get();
 
@@ -63,6 +65,7 @@ export const getGooglePicture = async () => {
   }
 };
 export const storeUserData = async () => {
+  console.log('go to store user data ???');
   try {
     const user = await account.get();
 
@@ -96,6 +99,7 @@ export const storeUserData = async () => {
     return newUser;
   } catch (error) {
     console.log('storeUserData', error);
+    return null;
   }
 };
 export const getExistingUser = async (id: string) => {
@@ -119,5 +123,25 @@ export const logoutUser = async () => {
   } catch (error) {
     console.log('logout error:', error);
     return false;
+  }
+};
+
+export const getAllUsers = async (limit: number, offset: number) => {
+  try {
+    const { documents: users, total } = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.limit(limit), Query.offset(offset)]
+    );
+
+    if (total === 0) return { users: [], total };
+
+    return {
+      users,
+      total,
+    };
+  } catch (error) {
+    console.log('error fetch get all user', error);
+    return { users: [], total: 0 };
   }
 };
